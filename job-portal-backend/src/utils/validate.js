@@ -1,7 +1,7 @@
 const Validator = require("validator");
 const validateUser = (req) => {
   const { name, email, password, confirmPassword,  } = req.body;
-  if (!name || !email || !password || !confirmPassword || !role) {
+  if (!name || !email || !password || !confirmPassword ) {
     return "Please fill all the fields";
   } else if (!Validator.isEmail(email)) {
     return "Invalid email address";

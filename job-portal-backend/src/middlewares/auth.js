@@ -28,7 +28,7 @@ const authMiddleWare = async (req, res, next) => {
         message: "User not Found",
       });
     }
-    req.user = user;
+    req.user = { _id, isAdmin };
     next();
   } catch (err) {
     console.log(err);
@@ -39,4 +39,20 @@ const authMiddleWare = async (req, res, next) => {
   }
 };
 
-module.exports = { authMiddleWare };
+const isAdmin = (req, res, next) => {
+  try {
+    if (!req.user.isAdmin) {
+      return res.status(401).json({
+        success: false,
+        message: "Access Denied Admin only",
+      });
+    }
+    next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Admin authentication failed, please try again",
+    });
+  }
+};
+module.exports = { authMiddleWare, isAdmin };

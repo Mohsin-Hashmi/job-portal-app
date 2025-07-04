@@ -18,23 +18,28 @@ const Header = () => {
     }
   };
   const role = useSelector((store) => store.user.isAdmin);
-  console.log("role is ", role);
-
   return (
     <header className="py-5">
       <nav className="flex justify-between items-center">
-        <Link to="/">
-          <img className="cursor-pointer" src={logo} alt="logo icon" />
-        </Link>
+        {role ? (
+          <Link to="/company-dashboard">
+            <img className="cursor-pointer" src={logo} alt="logo icon" />
+          </Link>
+        ) : (
+          <Link to="/">
+            <img className="cursor-pointer" src={logo} alt="logo icon" />
+          </Link>
+        )}
 
-        <ul className="flex gap-x-7 text-[10px] font-normal">
+        <ul
+          className={`flex text-[10px] font-normal ${
+            role ? " gap-x-7" : " gap-x-16"
+          }`}
+        >
           {role && (
             <>
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/company-dashboard">Company Dashboard</Link>
-              </li>
-              <li className="text-white text-base font-medium hover:text-[#309689]">
-                <Link to="/register-your-company">Register Company</Link>
               </li>
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/post-job">Post a Job</Link>
@@ -80,12 +85,21 @@ const Header = () => {
               >
                 Logout
               </button>
-              <Link
-                to="/create-profile"
-                className="py-3 px-4 inline-block bg-[#309689] rounded-lg text-white text-base font-medium ml-5"
-              >
-                Create Profile
-              </Link>
+              {role ? (
+                <Link
+                  to="/register-your-company"
+                  className="py-3 px-4 inline-block bg-[#309689] rounded-lg text-white text-base font-medium ml-5"
+                >
+                  Register Company
+                </Link>
+              ) : (
+                <Link
+                  to="/create-profile"
+                  className="py-3 px-4 inline-block bg-[#309689] rounded-lg text-white text-base font-medium ml-5"
+                >
+                  Create Profile
+                </Link>
+              )}
             </>
           )}
         </div>

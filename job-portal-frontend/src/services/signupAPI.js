@@ -1,10 +1,10 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constant";
-const signupAPI = async ({ name, email, password, confirmPassword , role}) => {
+const signupAPI = async ({ name, email, password, confirmPassword }) => {
   try {
     const response = await axios.post(
       `${BASE_URL}/auth/signup`,
-      { name, email, password, confirmPassword, role },
+      { name, email, password, confirmPassword },
       { withCredentials: true }
     );
     if (!response) {

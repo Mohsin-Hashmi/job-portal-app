@@ -50,7 +50,7 @@ const Login = () => {
       console.log('response is ', response.user);
       dispatch(addUser(response.user));
       localStorage.setItem("token", response.token);
-      if(response.isAdmin){
+      if(response.user.isAdmin){
         navigate("/company-dashboard")
       }else{
         navigate("/");

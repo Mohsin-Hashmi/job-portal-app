@@ -11,7 +11,6 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("jobseeker");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setError] = useState({});
@@ -46,6 +45,7 @@ const SignUp = () => {
     setShowPassword((prev) => !prev);
   };
 
+  /**Handle Signup API Function */
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -56,13 +56,12 @@ const SignUp = () => {
       email,
       password,
       confirmPassword,
-      role,
     });
     if (!response?.success) {
       setError({ api: response?.message || "Signup failed" });
       return;
     }
-    dispatch(addUser(response?.data));
+    dispatch(addUser(response?.user));
     navigate("/auth/login");
   };
   return (
@@ -123,19 +122,6 @@ const SignUp = () => {
                 {errors.confirmPassword}
               </div>
             )}
-            <div className="relative w-full">
-              <select
-                className="w-full py-[8px] pl-[11px] mb-[6px] mt-[18px] outline-none rounded-lg border border-[#011F5B] text-[#011F5B] appearance-none"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="jobseeker">Job Seeker</option>
-                <option value="company">Company</option>
-              </select>
-              <div className="absolute top-1/2 right-4 -translate-y-1/4 pointer-events-none text-[#011F5B] text-sm">
-                ▼
-              </div>
-            </div>
 
             <div className="flex items-top gap-x-2  mb-2">
               <input
