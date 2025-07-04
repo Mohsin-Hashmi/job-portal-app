@@ -1,15 +1,23 @@
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import logoutAPI from "../services/logoutAPI";
 const Header = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/auth/login");
+  const handleLogout = async () => {
+    try {
+      const response = await logoutAPI();
+      if (!response) {
+        console.log("Error in logout API");
+      }
+      navigate("/auth/login");
+    } catch (err) {
+      console.log("Error in logout API");
+    }
   };
-  const role= useSelector((store)=> store.user.role)
+  const role = useSelector((store) => store.user.isAdmin);
   console.log("role is ", role);
 
   return (
@@ -20,7 +28,7 @@ const Header = () => {
         </Link>
 
         <ul className="flex gap-x-7 text-[10px] font-normal">
-          {role === "company" && (
+          {role && (
             <>
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/company-dashboard">Company Dashboard</Link>
@@ -33,7 +41,7 @@ const Header = () => {
               </li>
             </>
           )}
-          {role === "jobseeker" && (
+          {!role && (
             <>
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/">Home</Link>

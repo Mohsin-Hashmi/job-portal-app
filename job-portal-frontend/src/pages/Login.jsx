@@ -50,13 +50,11 @@ const Login = () => {
       console.log('response is ', response.user);
       dispatch(addUser(response.user));
       localStorage.setItem("token", response.token);
-      if(response.role === 'jobseeker'){
-        navigate("/");
-      }else if(response.role === 'company'){
+      if(response.isAdmin){
         navigate("/company-dashboard")
-      }
-      
-      
+      }else{
+        navigate("/");
+      }   
     } catch (err) {
       console.log("Error is login API ");
     }

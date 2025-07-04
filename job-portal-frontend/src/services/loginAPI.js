@@ -15,7 +15,7 @@ export const loginAPI = async ({ email, password }) => {
     if (!response) {
       throw new Error("No response from server");
     }
-    console.log("api: ", response.data)
+    console.log("login response is :", response)
     return response.data;
   } catch (err) {
     console.log("Error in loginAPI:", err);

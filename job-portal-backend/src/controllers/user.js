@@ -10,7 +10,7 @@ const Validator = require("validator");
  */
 const Signup = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword, role } = req.body;
+    const { name, email, password, confirmPassword, isAdmin } = req.body;
     const validationError = validateUser(req);
     if (validationError) {
       return res.status(400).json({
@@ -36,7 +36,7 @@ const Signup = async (req, res) => {
       name,
       email,
       password: HASHED_PASSWORD,
-      role
+      isAdmin: isAdmin || false,
     });
     const newUser = await user.save();
     res.status(201).json({
@@ -87,20 +87,23 @@ const Login = async (req, res) => {
         message: "Invalid credentials.",
       });
     }
-    const token = jwt.sign({ _id: isUserExist._id , role: isUserExist.role}, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { _id: isUserExist._id, isAdmin: isUserExist.isAdmin },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     res.cookie("token", token, {
-      httpOnly: true
+      httpOnly: true,
     });
-    const { _id: userId, name, email: userEmail, role } = isUserExist;
+    const { _id: userId, name, email: userEmail, isAdmin } = isUserExist;
     res.status(200).json({
       success: true,
       token,
-      role: isUserExist.role,
       message: "User logged in successfully",
-      user: { _id: userId, name, email: userEmail, role },
+      user: { _id: userId, name, email: userEmail, isAdmin },
     });
   } catch (err) {
     res.status(500).json({
@@ -115,6 +118,7 @@ const Login = async (req, res) => {
  */
 const Logout = async (req, res) => {
   try {
+    
     res.cookie("token", null, {
       expires: new Date(Date.now()),
     });
@@ -128,7 +132,6 @@ const Logout = async (req, res) => {
     });
   }
 };
-
 
 /**
  * Contact Us  API

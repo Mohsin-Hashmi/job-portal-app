@@ -1,6 +1,6 @@
 const Validator = require("validator");
 const validateUser = (req) => {
-  const { name, email, password, confirmPassword, role } = req.body;
+  const { name, email, password, confirmPassword,  } = req.body;
   if (!name || !email || !password || !confirmPassword || !role) {
     return "Please fill all the fields";
   } else if (!Validator.isEmail(email)) {
@@ -9,8 +9,6 @@ const validateUser = (req) => {
     return "Password is weak please make it strong";
   } else if (password.length < 3 || password.length > 20) {
     return "Password length should be between 3 to 20 characters";
-  }else if (!["jobseeker", "company"].includes(role)) {
-    return "Invalid role selected";
   }
   return null;
 };
