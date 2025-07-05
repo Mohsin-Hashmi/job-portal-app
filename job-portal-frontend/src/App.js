@@ -18,15 +18,17 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import ViewAppliedJobs from "./pages/ViewAppliedJobs";
 function App() {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
+  console.log("user", user)
 
-  useEffect(() => {
-    if (user && user.isAdmin) {
-      navigate("/company-dashboard");
-    }
-  }, [user, navigate]);
+ useEffect(() => {
+  if (user && user.isAdmin && window.location.pathname === "/") {
+    navigate("/company-dashboard");
+  }
+}, [user, navigate]);
   return (
     <>
       <ScrollToTop />
@@ -81,6 +83,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <ApplyForJob />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/view-applied-jobs"
+          element={
+            <ProtectedRoute user={user}>
+              <ViewAppliedJobs />
             </ProtectedRoute>
           }
         />

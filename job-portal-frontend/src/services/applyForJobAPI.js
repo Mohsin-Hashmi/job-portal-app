@@ -11,6 +11,7 @@ const applyForJob = async ({
   portfolioProfileLink,
   startDate,
   aboutYourSelf,
+  jobId
 }) => {
   try {
     const response = await axios.post(
@@ -26,6 +27,7 @@ const applyForJob = async ({
         portfolioProfileLink,
         startDate,
         aboutYourSelf,
+        jobId
       },
       {
         headers: {

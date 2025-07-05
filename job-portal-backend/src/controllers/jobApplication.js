@@ -12,6 +12,7 @@ const sendJobApplication = async (req, res) => {
       portfolioProfileLink,
       startDate,
       aboutYourSelf,
+      jobId
     } = req.body;
 
     // const resumePath = req.file.path; // Uploaded file path
@@ -30,6 +31,8 @@ const sendJobApplication = async (req, res) => {
       portfolioProfileLink,
       startDate,
       aboutYourSelf,
+      user:req.user._id,
+      job: jobId,
     });
 
     await application.save();
@@ -37,6 +40,9 @@ const sendJobApplication = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Application submitted successfully!",
+      user:req.user._id,
+      job: jobId,
+      JobApplication:application
     });
   } catch (err) {
     res.status(500).json({

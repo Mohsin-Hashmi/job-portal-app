@@ -33,7 +33,7 @@ const Header = () => {
 
         <ul
           className={`flex text-[10px] font-normal ${
-            role ? " gap-x-7" : " gap-x-16"
+            role ? " gap-x-7" : " gap-x-10"
           }`}
         >
           {role && (
@@ -44,6 +44,9 @@ const Header = () => {
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/post-job">Post a Job</Link>
               </li>
+               <li className="text-white text-base font-medium hover:text-[#309689]">
+                <Link to="/manage-job">Manage Job</Link>
+              </li>
             </>
           )}
           {!role && (
@@ -53,6 +56,9 @@ const Header = () => {
               </li>
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/jobs">Jobs</Link>
+              </li>
+              <li className="text-white text-base font-medium hover:text-[#309689]">
+                <Link to="/view-applied-jobs">View Applied Jobs</Link>
               </li>
             </>
           )}

@@ -5,7 +5,13 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import applyForJob from "../services/applyForJobAPI";
+import { useDispatch } from "react-redux";
+import { addJobApplication } from "../utils/jobApplicationsSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ApplyForJob = () => {
+  const dispatch= useDispatch();
+  const navigate=useNavigate();
   const [fullName, setFullName] = useState();
   const [email, setEmail] = useState();
   const [resumeFile, setResumeFile] = useState();
@@ -23,7 +29,8 @@ const ApplyForJob = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await applyForJob({
+    try{
+      const response = await applyForJob({
       fullName,
       email,
       resumeFile,
@@ -34,8 +41,27 @@ const ApplyForJob = () => {
       portfolioProfileLink,
       startDate,
       aboutYourSelf,
+      jobId:_id
     });
-    console.log("apply for job:", response)
+    
+    dispatch(addJobApplication(response.JobApplication))
+    toast.success("Job Submitted Successfully")
+    navigate('/view-applied-jobs')
+    setFullName("");
+    setEmail("");
+    setPhoneNumber("");
+    setResumeFile("");
+    setAboutYourSelf("");
+    setCoverLetter("");
+    setLinkedInProfileLink("");
+    setGitHubProfileLink("");
+    setPortfolioProfileLink("");
+    setStartDate("");
+    console.log("apply for job:", response.JobApplication)
+    }catch(err){
+      console.log("Error in job submitting", err)
+    }
+    
   };
 
 
