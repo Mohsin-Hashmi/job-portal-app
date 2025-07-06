@@ -12,7 +12,7 @@ const sendJobApplication = async (req, res) => {
       portfolioProfileLink,
       startDate,
       aboutYourSelf,
-      jobId
+      jobId,
     } = req.body;
 
     // const resumePath = req.file.path; // Uploaded file path
@@ -31,7 +31,7 @@ const sendJobApplication = async (req, res) => {
       portfolioProfileLink,
       startDate,
       aboutYourSelf,
-      user:req.user._id,
+      user: req.user._id,
       job: jobId,
     });
 
@@ -40,9 +40,9 @@ const sendJobApplication = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Application submitted successfully!",
-      user:req.user._id,
+      user: req.user._id,
       job: jobId,
-      JobApplication:application
+      JobApplication: application,
     });
   } catch (err) {
     res.status(500).json({
@@ -53,4 +53,27 @@ const sendJobApplication = async (req, res) => {
   }
 };
 
-module.exports = sendJobApplication;
+const getAppliedJobs = async (req, res) => {
+  try {
+    const userId = req.user._id
+    const appliedJobs = await JobApplication.find(userId);
+    if (appliedJobs.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No Applied Jobs are Available",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Applied Jobs get successfully",
+      applied_Jobs: appliedJobs
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to get applications data",
+    });
+  }
+};
+
+module.exports = { sendJobApplication, getAppliedJobs };

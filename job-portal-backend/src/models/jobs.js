@@ -85,6 +85,11 @@ const jobsSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    Admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required:true
+    }
   },
   { timestamps: true }
 );

@@ -2,14 +2,32 @@ import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useSelector } from 'react-redux';
-
+import getAppliedJobs from '../services/getAppliedJobsAPI';
+import { useEffect } from 'react';
+import { useState } from 'react';
 const ViewAppliedJobs = () => {
-  const userAppliedJobs = useSelector((store) => store.jobApplications.job);
+    const [userAppliedJobs, setUserAppliedJobs] = useState([]);
+  
   const allJobs = useSelector((store) => store.jobs);
 
+  
+
+  const handleAppliedJobs = async()=>{
+    try{
+      const application= await getAppliedJobs()
+      const jobId= application.map((app)=> app.job)
+      setUserAppliedJobs(jobId)
+
+    }catch(err){
+      console.log("Error in get applied job API")
+    }
+  }
+
+  useEffect(()=>{
+    handleAppliedJobs(appliedJobs)
+  }, [])
   // Filter jobs that match applied job IDs
   const appliedJobs = allJobs.filter((job) => userAppliedJobs.includes(job._id));
-
   return (
     <div className=" container">
       <Header />

@@ -7,9 +7,12 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addJobs } from "../utils/jobsSlice";
+import { useSelector } from "react-redux";
 const PostJob = () => {
-  const dispatch= useDispatch();
-  const navigate= useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const adminStore = useSelector((store) => store.user);
+  const { _id } = adminStore;
   const [title, setTitle] = useState();
   const [company, setCompany] = useState();
   const [location, setLocation] = useState();
@@ -37,15 +40,16 @@ const PostJob = () => {
         experience,
         requirements,
         benefits,
+        Admin: _id,
       });
       console.log(response);
-      if (response.status === 200) {
+      if (response.success === true) {
         toast.success("Job Created Successfully.");
       } else {
         toast.error("Failed to create job. Please try again.");
       }
       dispatch(addJobs(response));
-      navigate('/manage-job')
+      navigate("/manage-job");
     } catch (error) {
       toast.error("An error occurred: " + error.message);
     }
