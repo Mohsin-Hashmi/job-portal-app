@@ -8,7 +8,7 @@ import { useState } from 'react';
 const ViewAppliedJobs = () => {
     const [userAppliedJobs, setUserAppliedJobs] = useState([]);
   
-  const allJobs = useSelector((store) => store.jobs);
+  const allJobs = useSelector((store) => store?.jobs?.jobs);
 
   
 

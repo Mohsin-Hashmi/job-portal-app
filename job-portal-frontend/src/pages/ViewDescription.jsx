@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 const ViewDescription = () => {
   const { _id } = useParams();
-  const jobs = useSelector((store) => store.jobs);
+  const jobs = useSelector((store) => store?.jobs?.jobs);
 
   const job = jobs.find((job) => job._id === _id);
 

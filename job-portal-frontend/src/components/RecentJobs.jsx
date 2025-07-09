@@ -14,6 +14,7 @@ const RecentJobs = ({searchParams}) => {
   const fetchJobs = async () => {
     try {
       const response = await getAllJobs();
+      console.log("Get all jobs are:", response)
       if (!response || !response.success) {
         console.log("No jobs found");
         return;

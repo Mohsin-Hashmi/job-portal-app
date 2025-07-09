@@ -23,7 +23,7 @@ const ApplyForJob = () => {
   const [startDate, setStartDate] = useState();
   const [aboutYourSelf, setAboutYourSelf] = useState();
   const { _id } = useParams();
-  const jobs = useSelector((store) => store.jobs);
+  const jobs = useSelector((store) => store?.jobs?.jobs);
   const job = jobs.find((job) => job._id === _id);
   console.log("Job details: ", job);
 

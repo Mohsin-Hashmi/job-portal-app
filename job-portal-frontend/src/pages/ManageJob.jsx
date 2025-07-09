@@ -1,28 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import getAllJobs from "../services/getJobsAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { addJobs } from "../utils/jobsSlice";
 import deleteJobAPI from "../services/deleteJobAPI";
+import updateJobAPI from "../services/updateJobAPI";
 import { removeJob } from "../utils/jobsSlice";
 import { toast } from "react-toastify";
+import UpdateJobModal from "../components/UpdateJobModal";
+import { updateJob } from "../utils/jobsSlice";
 const ManageJob = () => {
   const dispatch = useDispatch();
   const jobStore = useSelector((store) => store.jobs.jobs || []);
   const admin = useSelector((store) => store.user);
- const adminJobs = Array.isArray(jobStore)
-  ? jobStore.filter((job) => job.Admin?.toString() === admin._id?.toString())
-  : [];
+  const adminJobs = Array.isArray(jobStore)
+    ? jobStore.filter((job) => job.Admin?.toString() === admin._id?.toString())
+    : [];
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+ 
 
   useEffect(() => {
     const handleGetJob = async () => {
       try {
         const response = await getAllJobs();
-        console.log("get job api:", response.current_jobs_are)
+        console.log("get job api:", response.current_jobs_are);
         dispatch(addJobs(response.current_jobs_are));
-        
       } catch (err) {
         console.log("Error in get Job API", err);
       }
@@ -31,19 +36,34 @@ const ManageJob = () => {
     handleGetJob();
   }, [dispatch]);
 
-  const handleEdit = (jobId) => {
-    console.log("Edit job:", jobId);
-    // navigate to edit job page
-  };
+  // Update API Function
+ 
+const handleEdit = async (jobId, updatedData) => {
+  try {
+    const response = await updateJobAPI(jobId, updatedData);
+    const updatedJob = response;
 
+    if (updatedJob) {
+      dispatch(updateJob(updatedJob)); 
+      toast.success("Job updated successfully!");
+      setShowModal(false); // close modal
+    } else {
+      toast.error("Update failed: No job returned.");
+    }
+  } catch (err) {
+    console.log("Error in update API:", err);
+    toast.error("Failed to update job");
+  }
+};
+  // Delete API Function
   const handleDelete = async (jobId) => {
     try {
       const response = await deleteJobAPI(jobId);
-      dispatch(removeJob(response))
-      toast.success("Job Deleted Successfully")
+      dispatch(removeJob(response));
+      toast.success("Job Deleted Successfully");
     } catch (err) {
-      console.log("error in delete job API")
-    }    
+      console.log("error in delete job API");
+    }
   };
 
   return (
@@ -85,7 +105,11 @@ const ManageJob = () => {
                     </td>
                     <td className="py-3 px-4 space-x-2">
                       <button
-                        onClick={() => handleEdit(job._id)}
+                        onClick={()=>{
+                          setShowModal(true)
+                          setSelectedJob(job)
+                        }}
+                        
                         className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-3 py-1 rounded"
                       >
                         Edit
@@ -104,6 +128,9 @@ const ManageJob = () => {
           </div>
         )}
       </section>
+      {showModal && (
+        <UpdateJobModal job={selectedJob} onClose={() => setShowModal(false)} editTask={handleEdit} />
+      )}
       <Footer />
     </div>
   );

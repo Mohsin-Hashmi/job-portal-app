@@ -143,10 +143,8 @@ const updateJobs = async (req, res) => {
       location,
       type,
       salary,
-      description,
-      requirements,
-      skills,
-      benefits,
+      department,
+      experience,
     } = req.body;
     const isJobExist = await Jobs.findById(_id);
     if (!isJobExist) {
@@ -164,10 +162,9 @@ const updateJobs = async (req, res) => {
           location: location || isJobExist.location,
           type: type || isJobExist.type,
           salary: salary || isJobExist.salary,
-          description: description || isJobExist.description,
-          requirements: requirements || isJobExist.requirements,
-          skills: skills || isJobExist.skills,
-          benefits: benefits || isJobExist.benefits,
+          department: department || isJobExist.department,
+          experience: experience || isJobExist.experience,
+          
         },
       },
       { new: true } // return updated document
