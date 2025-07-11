@@ -4,17 +4,18 @@ import { Link } from "react-router-dom";
 import JobCardSkeleton from "./JobCardSkeleton";
 import { useDispatch } from "react-redux";
 import { addJobs } from "../utils/jobsSlice";
-
-const RecentJobs = ({searchParams}) => {
+import savedJobAPI from "../services/savedJobAPI";
+const RecentJobs = ({ searchParams }) => {
   const [jobs, setJobs] = useState([]);
   const [filterJobs, setFilterJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
+  /**Get All Jobs API Function */
   const fetchJobs = async () => {
     try {
       const response = await getAllJobs();
-      console.log("Get all jobs are:", response)
+      console.log("Get all jobs are:", response);
       if (!response || !response.success) {
         console.log("No jobs found");
         return;
@@ -35,7 +36,7 @@ const RecentJobs = ({searchParams}) => {
     fetchJobs();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     // Filter jobs whenever searchParams or jobs change
     const { titleOrCompany, location, jobType } = searchParams;
     const filtered = jobs.filter((job) => {
@@ -55,17 +56,28 @@ const RecentJobs = ({searchParams}) => {
       const matchesLocation =
         !searchLocation || jobLocation.includes(searchLocation);
 
-      const matchesJobType =
-        !searchJobType || jobTypeValue === searchJobType;
+      const matchesJobType = !searchJobType || jobTypeValue === searchJobType;
 
       return matchesTitleOrCompany && matchesLocation && matchesJobType;
     });
     setFilterJobs(filtered);
   }, [searchParams, jobs]);
 
+  /**Saved Job API Function */
+
+  const handleSavedJob = async (jobId) => {
+    try {
+      await savedJobAPI(jobId);
+    } catch (err) {
+      console.log("Error occurs in saved job API");
+    }
+  };
+
   return (
     <section className="py-[60px] text-white">
-      <h2 className="text-[50px] font-bold mb-10 text-[#FFFFFF] text-center">Recent Jobs Available</h2>
+      <h2 className="text-[50px] font-bold mb-10 text-[#FFFFFF] text-center">
+        Recent Jobs Available
+      </h2>
       {loading ? (
         <div>
           {[...Array(10)].map((_, i) => (
@@ -75,7 +87,10 @@ const RecentJobs = ({searchParams}) => {
       ) : filterJobs.length > 0 ? (
         <div>
           {filterJobs.map((job) => (
-            <div key={job._id} className="bg-[#F6FBFF] p-6 rounded-lg mb-4 text-[#011F5B] shadow-[0px_-5px_23px_0px_#011F5B]">
+            <div
+              key={job._id}
+              className="bg-[#F6FBFF] p-6 rounded-lg mb-4 text-[#011F5B] shadow-[0px_-5px_23px_0px_#011F5B]"
+            >
               <h3 className="text-[30px] font-semibold">{job.title}</h3>
               <p className="text-[26px] font-medium">{job.company}</p>
               <p className="text-[20px]">
@@ -89,7 +104,7 @@ const RecentJobs = ({searchParams}) => {
                 to={`/view-description/${job._id}`}
                 className="bg-[#309689] text-[#FFFFFF] w-[190px] text-center p-3 mt-3 rounded-xl block text-lg"
               >
-                View Description 
+                View Description
               </Link>
               <Link
                 to={`/apply-for-job/${job._id}`}
@@ -97,6 +112,12 @@ const RecentJobs = ({searchParams}) => {
               >
                 Apply For Job
               </Link>
+              <button
+                onClick={() => handleSavedJob(job._id)}
+                className="bg-[#309689] text-[#FFFFFF]  w-[190px] text-center p-3 mt-3 rounded-xl block text-lg"
+              >
+                Saved Job
+              </button>
             </div>
           ))}
         </div>

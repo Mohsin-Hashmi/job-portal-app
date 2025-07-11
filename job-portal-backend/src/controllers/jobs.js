@@ -1,5 +1,5 @@
 const Jobs = require("../models/jobs");
-
+const User = require("../models/user");
 /**
  * create Job API
  */
@@ -137,15 +137,8 @@ const getJobById = async (req, res) => {
 const updateJobs = async (req, res) => {
   try {
     const { _id } = req.params;
-    const {
-      title,
-      company,
-      location,
-      type,
-      salary,
-      department,
-      experience,
-    } = req.body;
+    const { title, company, location, type, salary, department, experience } =
+      req.body;
     const isJobExist = await Jobs.findById(_id);
     if (!isJobExist) {
       return res.status(404).json({
@@ -164,7 +157,6 @@ const updateJobs = async (req, res) => {
           salary: salary || isJobExist.salary,
           department: department || isJobExist.department,
           experience: experience || isJobExist.experience,
-          
         },
       },
       { new: true } // return updated document
@@ -212,4 +204,132 @@ const deleteJob = async (req, res) => {
   }
 };
 
-module.exports = { createJob, getJobs, getJobById, deleteJob, updateJobs };
+/**
+ * Save Job API
+ */
+
+const savedJob = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const jobId = req.params._id;
+    if (!userId) {
+      return res.status(404).json({
+        success: false,
+        message: "Id is required",
+      });
+    }
+    const job = await Jobs.findById(jobId);
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: "No Job Found with this Id",
+      });
+    }
+
+    const user = await User.findById(userId);
+    //check the job is already save
+    if (user.savedJobs.includes(jobId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Job already saved",
+      });
+    }
+    user.savedJobs.push(jobId);
+    await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "Job saved successfully",
+      savedJobs: user.savedJobs,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error to save a job" + err.message,
+    });
+  }
+};
+
+/**
+ * Delete Save Job API
+ */
+
+const deleteSavedJob = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const jobId = req.params._id;
+    if (!userId) {
+      return res.status(404).json({
+        success: false,
+        message: "Id is required",
+      });
+    }
+    if (!jobId) {
+      return res.status(404).json({
+        success: false,
+        message: "No Job found with this Id",
+      });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status.json({
+        success: false,
+        message: "User not found with this Id",
+      });
+    }
+    user.savedJobs = user.savedJobs.filter((id) => id !== jobId);
+    await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "Saved Job Deleted Successfylly",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error to save a job" + err.message,
+    });
+  }
+};
+
+/**
+ * Get Save Job API
+ */
+
+const getSavedJobs = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    if (!userId) {
+      return res.status(404).json({
+        success: false,
+        message: "Id is required",
+      });
+    }
+    const user = await User.findById(userId).populate("savedJobs");
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found with this Id",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Saved Jobs Fetch Successfully",
+      savedJobs: user.savedJobs,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error to save a job" + err.message,
+    });
+  }
+};
+
+module.exports = {
+  createJob,
+  getJobs,
+  getJobById,
+  deleteJob,
+  updateJobs,
+  savedJob,
+  deleteSavedJob,
+  getSavedJobs,
+};
