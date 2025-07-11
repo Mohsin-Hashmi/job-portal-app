@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import ViewAppliedJobs from "./pages/ViewAppliedJobs";
 import AboutUs from "./pages/AboutUs";
+import SavedJobs from "./pages/SavedJobs";
 function App() {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
@@ -78,7 +79,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+         <Route
+          path="/saved-jobs"
+          element={
+            <ProtectedRoute user={user}>
+              <SavedJobs />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/apply-for-job/:_id"
           element={

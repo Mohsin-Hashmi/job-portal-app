@@ -33,7 +33,7 @@ const Header = () => {
 
         <ul
           className={`flex text-[10px] font-normal ${
-            role ? " gap-x-7" : " gap-x-10"
+            role ? " gap-x-7" : " gap-x-8"
           }`}
         >
           {role && (
@@ -59,6 +59,9 @@ const Header = () => {
               </li>
               <li className="text-white text-base font-medium hover:text-[#309689]">
                 <Link to="/view-applied-jobs">View Applied Jobs</Link>
+              </li>
+               <li className="text-white text-base font-medium hover:text-[#309689]">
+                <Link to="/saved-jobs">Saved Jobs</Link>
               </li>
             </>
           )}

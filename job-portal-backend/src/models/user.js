@@ -25,12 +25,14 @@ const userSchema = new mongoose.Schema(
     },
     isAdmin: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    savedJobs:{
-      type: [String],
-      default: []
-    }
+    savedJobs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Jobs",
+      },
+    ],
   },
   { timestamps: true }
 );

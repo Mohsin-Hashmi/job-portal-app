@@ -5,6 +5,7 @@ import JobCardSkeleton from "./JobCardSkeleton";
 import { useDispatch } from "react-redux";
 import { addJobs } from "../utils/jobsSlice";
 import savedJobAPI from "../services/savedJobAPI";
+import { toast } from "react-toastify";
 const RecentJobs = ({ searchParams }) => {
   const [jobs, setJobs] = useState([]);
   const [filterJobs, setFilterJobs] = useState([]);
@@ -67,7 +68,10 @@ const RecentJobs = ({ searchParams }) => {
 
   const handleSavedJob = async (jobId) => {
     try {
-      await savedJobAPI(jobId);
+      const response= await savedJobAPI(jobId);
+      if(response){
+        toast.success("Job Saved Successfully");
+      }
     } catch (err) {
       console.log("Error occurs in saved job API");
     }
@@ -121,6 +125,7 @@ const RecentJobs = ({ searchParams }) => {
             </div>
           ))}
         </div>
+        
       ) : (
         <div className="text-center">
           <p className="text-[20px]">No jobs available at the moment</p>

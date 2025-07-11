@@ -281,6 +281,7 @@ const deleteSavedJob = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Saved Job Deleted Successfylly",
+      deletedJob: user.savedJobs
     });
   } catch (err) {
     res.status(500).json({
