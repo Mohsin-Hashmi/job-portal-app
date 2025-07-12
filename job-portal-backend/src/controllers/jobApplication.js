@@ -55,18 +55,27 @@ const sendJobApplication = async (req, res) => {
 
 const getAppliedJobs = async (req, res) => {
   try {
-    const userId = req.user._id
-    const appliedJobs = await JobApplication.find(userId);
-    if (appliedJobs.length === 0) {
+    const userId = req.user._id;
+    console.log("user id is ", userId)
+    if(!userId){
+      return res.status(404).json({
+        success:false,
+        message: "User not found"
+      })
+    }
+    // ✅ Fetch applications where user = current logged-in user
+    const appliedJobs = await JobApplication.find({ user: userId }).populate("job");
+    if (!appliedJobs || appliedJobs.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No Applied Jobs are Available",
+        message: "No applied jobs found for this user",
       });
     }
-    res.status(200).json({
+
+    return res.status(200).json({
       success: true,
-      message: "Applied Jobs get successfully",
-      applied_Jobs: appliedJobs
+      message: "Applied jobs fetched successfully",
+      applied_Jobs: appliedJobs,
     });
   } catch (err) {
     res.status(500).json({

@@ -34,7 +34,7 @@ const SavedJobs = () => {
         toast.error("Failed to Delete Job");
       }
     } catch (err) {
-      console.log(err);
+      console.log("Error in delete API",err);
     }
   };
 
@@ -65,15 +65,14 @@ const SavedJobs = () => {
           <p className="text-gray-600">No jobs found.</p>
         ) : (
           <div className="overflow-x-auto rounded-lg">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow ">
+            <table className="min-w-full bg-white  rounded-lg shadow ">
               <thead>
-                <tr className="bg-gray-100 text-gray-700 text-left text-sm uppercase tracking-wider">
+                <tr className="bg-blue-500 text-[#FFFFFF] text-left text-sm uppercase tracking-wider">
                   <th className="py-3 px-4">Title</th>
                   <th className="py-3 px-4">Company</th>
                   <th className="py-3 px-4">Location</th>
                   <th className="py-3 px-4">Type</th>
                   <th className="py-3 px-4">Submission</th>
-
                   <th className="py-3 px-4">Salary</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4">Action</th>

@@ -7,7 +7,6 @@ const jobApplicationSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    
   },
   phoneNumber: {
     type: Number,
@@ -46,6 +45,11 @@ const jobApplicationSchema = new mongoose.Schema({
   aboutYourSelf: {
     type: String,
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending"
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
