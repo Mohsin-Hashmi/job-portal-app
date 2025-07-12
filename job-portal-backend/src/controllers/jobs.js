@@ -249,6 +249,32 @@ const savedJob = async (req, res) => {
   }
 };
 
+const unSavedJob = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const jobId = req.params._id;
+    if (!userId) {
+      return res.status(404).json({
+        success: false,
+        message: "Id is required",
+      });
+    }
+    const user = await User.findById(userId);
+    user.savedJobs = user.savedJobs.filter((id) => id !== jobId);
+    await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "Job unsaved successfully",
+      savedJobs: user.savedJobs,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error to unsave a job" + err.message,
+    });
+  }
+};
+
 /**
  * Delete Save Job API
  */
@@ -276,12 +302,12 @@ const deleteSavedJob = async (req, res) => {
         message: "User not found with this Id",
       });
     }
-    user.savedJobs = user.savedJobs.filter((id) => id !== jobId);
+    user.savedJobs = user.savedJobs.filter((id) => id.toString() !== jobId);
     await user.save();
     return res.status(200).json({
       success: true,
       message: "Saved Job Deleted Successfylly",
-      deletedJob: user.savedJobs
+      deletedJob: user.savedJobs,
     });
   } catch (err) {
     res.status(500).json({
@@ -331,6 +357,7 @@ module.exports = {
   deleteJob,
   updateJobs,
   savedJob,
+  unSavedJob,
   deleteSavedJob,
   getSavedJobs,
 };

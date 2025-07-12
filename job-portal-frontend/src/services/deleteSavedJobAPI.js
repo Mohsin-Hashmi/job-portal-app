@@ -4,7 +4,6 @@ const deleteSavedJobAPI = async (jobId) => {
   try {
     const response = await axios.delete(
       `${BASE_URL}/jobs/${jobId}/save`,
-      {},
       {
         withCredentials: true,
       }

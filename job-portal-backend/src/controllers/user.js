@@ -98,12 +98,18 @@ const Login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
     });
-    const { _id: userId, name, email: userEmail, isAdmin } = isUserExist;
+    const {
+      _id: userId,
+      name,
+      email: userEmail,
+      isAdmin,
+      savedJobs: savedJobs,
+    } = isUserExist;
     res.status(200).json({
       success: true,
       token,
       message: "User logged in successfully",
-      user: { _id: userId, name, email: userEmail, isAdmin },
+      user: { _id: userId, name, email: userEmail, isAdmin, savedJobs },
     });
   } catch (err) {
     res.status(500).json({
@@ -118,7 +124,6 @@ const Login = async (req, res) => {
  */
 const Logout = async (req, res) => {
   try {
-    
     res.cookie("token", null, {
       expires: new Date(Date.now()),
     });

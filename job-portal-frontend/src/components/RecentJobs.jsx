@@ -6,7 +6,9 @@ import { useDispatch } from "react-redux";
 import { addJobs } from "../utils/jobsSlice";
 import savedJobAPI from "../services/savedJobAPI";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const RecentJobs = ({ searchParams }) => {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [filterJobs, setFilterJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,6 +73,7 @@ const RecentJobs = ({ searchParams }) => {
       const response= await savedJobAPI(jobId);
       if(response){
         toast.success("Job Saved Successfully");
+        navigate('/saved-jobs')
       }
     } catch (err) {
       console.log("Error occurs in saved job API");
